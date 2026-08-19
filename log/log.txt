@@ -1,0 +1,2 @@
+{"level":"INFO","Time (Thời gian)":"2025-05-07T10:53:41.530+0700","caller":"cli/main.log.go:31","msg":"Info Log","line":1}
+{"level":"ERROR","Time (Thời gian)":"2025-05-07T10:53:41.531+0700","caller":"cli/main.log.go:32","msg":"Info Log","line":2}

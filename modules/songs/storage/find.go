@@ -18,3 +18,15 @@ func (s *store) FindAlbum(id string) (*songmodels.Albums, error) {
 	results := s.db.Table(songmodels.Albums{}.TableName()).Where("mask_id = ?", id).First(&albums)
 	return &albums, results.Error
 }
+
+func (s *store) FindArtist(id string) (*songmodels.Artists, error) {
+	var artist songmodels.Artists
+	results := s.db.Table(songmodels.Artists{}.TableName()).Where("mask_id = ?", id).First(&artist)
+	return &artist, results.Error
+}
+
+func (s *store) FindLyric(song int) (*songmodels.Lyric, error) {
+	var lyric songmodels.Lyric
+	results := s.db.Table(songmodels.Lyric{}.TableName()).Where("song = ?", song).First(&lyric)
+	return &lyric, results.Error
+}

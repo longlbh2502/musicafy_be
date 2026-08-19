@@ -22,7 +22,7 @@ func (s *store) CreateAlbum(data songmodels.Albums) (*songmodels.Albums, error) 
 		songmodels.Albums{MaskId: data.MaskId},
 	)
 	if results.Error != nil {
-		return nil, common.ErrDB(results.Error)
+		return nil, common.ErrDBWithMsg(results.Error, "Lỗi tạo album")
 	}
 	return &data, nil
 }
@@ -33,7 +33,7 @@ func (s *store) CreateArtist(data songmodels.Artists) (*songmodels.Artists, erro
 		songmodels.Artists{MaskId: data.MaskId},
 	)
 	if results.Error != nil {
-		return nil, common.ErrDB(results.Error)
+		return nil, common.ErrDBWithMsg(results.Error, "Lỗi tạo nghệ sĩ")
 	}
 	return &data, nil
 }
@@ -44,7 +44,7 @@ func (s *store) CreateComposer(data songmodels.Composers) (*songmodels.Composers
 		songmodels.Composers{MaskId: data.MaskId},
 	)
 	if results.Error != nil {
-		return nil, common.ErrDB(results.Error)
+		return nil, common.ErrDBWithMsg(results.Error, "Lỗi tạo tác giả")
 	}
 	return &data, nil
 }
@@ -55,7 +55,17 @@ func (s *store) CreateGenre(data songmodels.Genres) (*songmodels.Genres, error) 
 		songmodels.Genres{MaskId: data.MaskId},
 	)
 	if results.Error != nil {
-		return nil, common.ErrDB(results.Error)
+		return nil, common.ErrDBWithMsg(results.Error, "Lỗi tạo thể loại")
+	}
+	return &data, nil
+}
+
+func (s *store) CreateLyric(data songmodels.Lyric) (*songmodels.Lyric, error) {
+	results := s.db.Table(songmodels.Lyric{}.TableName()).Where("song = ?", data.Song).FirstOrCreate(
+		&data,
+	)
+	if results.Error != nil {
+		return nil, common.ErrDBWithMsg(results.Error, "Lỗi tạo lời bài hát")
 	}
 	return &data, nil
 }

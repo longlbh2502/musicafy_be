@@ -22,24 +22,60 @@ type resSuggestion struct {
 }
 
 type Artists struct {
-	Type       int     `json:"type"`
-	Id         string  `json:"id"`
-	Name       string  `json:"name"`
-	AliasName  string  `json:"aliasName"`
-	Thumbnail  *string `json:"thumbnail"`
-	ThumbnailM *string `json:"thumbnailM"`
-	Avatar     string  `json:"avatar"`
-	PlaylistId string  `json:"playlistId"`
-	Followers  int     `json:"followers"`
+	Type       int       `json:"type"`
+	Id         string    `json:"id"`
+	Name       string    `json:"name"`
+	AliasName  string    `json:"aliasName"`
+	Alias      *string   `json:"alias"`
+	Cover      *string   `json:"cover"`
+	Thumbnail  *string   `json:"thumbnail"`
+	ThumbnailM *string   `json:"thumbnailM"`
+	Avatar     string    `json:"avatar"`
+	PlaylistId string    `json:"playlistId"`
+	Followers  int       `json:"follow"`
+	Sections   []Section `json:"sections"`
 }
 
 func (a *Artists) ToModelDb() songmodels.Artists {
+	var sections []songmodels.Section
+	for _, v := range a.Sections {
+		sections = append(sections, v.ToModelDb())
+	}
+	thumb := &a.Avatar
+	if a.Thumbnail != nil {
+		thumb = a.Thumbnail
+	}
+	alias := a.AliasName
+	if a.Alias != nil {
+		alias = *a.Alias
+	}
 	return songmodels.Artists{
 		MaskId:      a.Id,
 		Name:        a.Name,
-		Thumbnail:   &a.Avatar,
+		Thumbnail:   thumb,
+		ThumbnailM:  a.ThumbnailM,
 		PlaylistId:  &a.PlaylistId,
 		TotalFollow: a.Followers,
+		Sections:    &sections,
+		Alias:       alias,
+	}
+}
+
+type Section struct {
+	Items []Song `json:"items"`
+	Type  string `json:"sectionType"`
+	Title string `json:"title"`
+}
+
+func (s *Section) ToModelDb() songmodels.Section {
+	var items []songmodels.Songs
+	for _, v := range s.Items {
+		items = append(items, v.ToModelDb())
+	}
+	return songmodels.Section{
+		Items: items,
+		Type:  s.Type,
+		Title: s.Title,
 	}
 }
 
@@ -67,16 +103,36 @@ func (a *ArtistsSearch) ToModelDb() songmodels.Artists {
 }
 
 type Genres struct {
-	Id     string `json:"id"`
-	Name   string `json:"name"`
-	ThumbS string `json:"thumbS"`
-	Alias  string `json:"alias"`
+	Id               string  `json:"id"`
+	EncodeId         *string `json:"encodeId,omitempty"`
+	Name             string  `json:"name"`
+	Title            *string `json:"title,omitempty"`
+	ThumbS           string  `json:"thumbS"`
+	Alias            string  `json:"alias"`
+	Cover            string  `json:"cover"`
+	Thumbnail        *string `json:"thumbnail,omitempty"`
+	ThumbnailR       *string `json:"thumbnailR,omitempty"`
+	ThumbnailHasText *string `json:"thumbnailHasText,omitempty"`
 }
 
 func (g *Genres) ToModelDb() songmodels.Genres {
+	name := g.Name
+	if g.Title != nil {
+		name = *g.Title
+	}
+
+	id := g.Id
+	if g.EncodeId != nil {
+		id = *g.EncodeId
+	}
+
 	return songmodels.Genres{
-		MaskId: g.Id,
-		Title:  g.Name,
+		MaskId:           id,
+		Title:            name,
+		Name:             &name,
+		Thumbnail:        g.Thumbnail,
+		ThumbnailR:       g.ThumbnailR,
+		ThumbnailHasText: g.ThumbnailHasText,
 	}
 }
 
@@ -135,9 +191,12 @@ type Song struct {
 	Type           int       `json:"type"`
 	Title          string    `json:"title"`
 	ID             string    `json:"id"`
+	EncodeId       *string   `json:"encodeId"`
 	RadioPid       string    `json:"radioPid"`
 	HasVideo       bool      `json:"hasVideo"`
 	Thumb          string    `json:"thumb"`
+	Thumbnail      *string   `json:"thumbnail"`
+	ThumbnailM     *string   `json:"thumbnailM"`
 	ThumbVideo     string    `json:"thumbVideo"`
 	Duration       int       `json:"duration"`
 	Link           string    `json:"link"`
@@ -171,13 +230,22 @@ func (s *Song) ToModelDb() songmodels.Songs {
 	for i, genre := range s.Genres {
 		genres[i] = genre.ToModelDb()
 	}
+	markId := s.ID
+	if s.EncodeId != nil {
+		markId = *s.EncodeId
+	}
+	thumb := &s.Thumb
+	if s.Thumbnail != nil {
+		thumb = s.Thumbnail
+	}
 	return songmodels.Songs{
-		MaskId:    s.ID,
-		Title:     s.Title,
-		Thumbnail: &s.Thumb,
-		Duration:  s.Duration,
-		Artists:   artists,
-		Genres:    genres,
+		MaskId:     markId,
+		Title:      s.Title,
+		Thumbnail:  thumb,
+		Duration:   s.Duration,
+		Artists:    artists,
+		Genres:     genres,
+		ThumbnailM: s.ThumbnailM,
 	}
 }
 
@@ -245,4 +313,26 @@ type Albums struct {
 	PR              bool      `json:"PR"`
 	Artists         []Artists `json:"artists"`
 	ArtistsNames    string    `json:"artistsNames"`
+}
+
+type Lyric struct {
+	Sentences      []Sentence `json:"sentences"`
+	File           string     `json:"file"`
+	EnabledVideoBG bool       `json:"enabledVideoBG"`
+	DefaultIBGUrls []string   `json:"defaultIBGUrls"`
+	BGMode         int        `json:"BGMode"`
+}
+
+type Sentence struct {
+	Words []Word `json:"words"`
+}
+
+type Word struct {
+	StartTime int    `json:"startTime"`
+	EndTime   int    `json:"endTime"`
+	Data      string `json:"data"`
+}
+
+type HubHomeResponse struct {
+	Genres []Genres `json:"genre"`
 }

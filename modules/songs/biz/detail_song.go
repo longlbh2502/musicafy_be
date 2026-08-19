@@ -65,6 +65,7 @@ func (biz *detailSongBiz) DetailSong(appContext appctx.AppContext, params Detail
 			ThumbnailM:  artist.ThumbnailM,
 			PlaylistId:  &artist.PlaylistId,
 			TotalFollow: artist.Followers,
+			Alias:       artist.AliasName,
 		})
 		if err != nil {
 			tx.Rollback()

@@ -1,0 +1,3 @@
+keyID: 006aea50ba929f40000000001
+keyName: Musicafy
+applicationKey: K006JUExhoirTbly0A3w4qGoX7vHMA0

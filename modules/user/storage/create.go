@@ -18,15 +18,12 @@ func (s *store) CreateAccount(data usermodels.User) (*int, error) {
 	return &id, nil
 }
 
-func (s *store) CreateVerify(ctx context.Context, data usermodels.Verify) (*int, error) {
-	var id int
+func (s *store) CreateVerify(data usermodels.Verify) (*usermodels.Verify, error) {
 	results := s.db.Table(usermodels.Verify{}.TableName()).Create(&data)
 	if results.Error != nil {
 		return nil, common.ErrDB(results.Error)
 	}
-	id = data.ID
-
-	return &id, nil
+	return &data, nil
 }
 
 func (s *store) CreateSession(ctx context.Context, data usermodels.Session) (*usermodels.Session, error) {

@@ -25,18 +25,21 @@ func Register(appctx appctx.AppContext) func(*gin.Context) {
 			panic(err)
 		}
 
-		if arg.Username == nil || arg.FullName == nil || arg.Password == nil {
+		if arg.Email == nil || arg.FullName == nil || arg.Password == nil {
 			panic(common.ErrInvalidRequest(errors.New("Invalid body")))
 		}
 
-		user, err := biz.Register(arg)
+		code, err := biz.Register(arg)
 		if err != nil {
 			panic(err)
 		}
 
 		mailer := appctx.GetMailer()
-		mailer.SendMail(*arg.Email, "Welcome to Musicafy", "Welcome to Musicafy")
+		err = mailer.SendOTPMail(*arg.Email, *code)
+		if err != nil {
+			panic(err)
+		}
 
-		c.JSON(http.StatusOK, common.SimpleSuccessResponse(user))
+		c.JSON(http.StatusOK, common.SimpleSuccessResponse(nil))
 	}
 }

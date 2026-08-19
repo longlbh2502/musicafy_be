@@ -44,11 +44,14 @@ func (Albums) TableName() string {
 }
 
 type Genres struct {
-	ID     int     `json:"-" gorm:"primaryKey;column:id"`
-	MaskId string  `json:"mask_id" gorm:"column:mask_id"`
-	Title  string  `json:"title" gorm:"column:title"`
-	Name   *string `json:"name" gorm:"column:name"`
-	Alias  *string `json:"alias" gorm:"column:alias"`
+	ID               int     `json:"-" gorm:"primaryKey;column:id"`
+	MaskId           string  `json:"mask_id" gorm:"column:mask_id"`
+	Title            string  `json:"title" gorm:"column:title"`
+	Name             *string `json:"name" gorm:"column:name"`
+	Alias            *string `json:"alias" gorm:"column:alias"`
+	Thumbnail        *string `json:"thumbnail" gorm:"-"`
+	ThumbnailHasText *string `json:"thumbnailHasText" gorm:"-"`
+	ThumbnailR       *string `json:"thumbnailR" gorm:"-"`
 }
 
 func (Genres) TableName() string {

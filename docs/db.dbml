@@ -25,22 +25,21 @@ Table users as U {
   dob timestamp
   active bool [not null, default: true]
   avatar varchar(255)
-  package serial
+  package varchar
   package_expire timestamptz [null]
   updated_at timestamptz
   password_changed_at timestamptz [not null, default: '0001-01-01 00:00:00Z']
   created_at timestamptz [not null, default: `now()`]
 }
 
-Ref: U.package > packages.id [delete: set null]
+Ref: U.package > packages.code [delete: set null]
 
 Table packages {
   id serial [pk]
   thumb varchar [note: 'ảnh cover']
   title varchar
-  code varchar
+  code varchar [unique]
   level int [default: 1]
-  duration int [default: 0, note: 'đơn vị giây']
   description varchar
 }
 
@@ -51,14 +50,15 @@ Table package_price {
   recommend bool [default: false]
   price float [default: 0]
   description varchar
-  package serial
+  package varchar
+  duration int [default: 0, note: 'đơn vị giây']
 }
 
-Ref: package_price.package > packages.id [delete: cascade]
+Ref: package_price.package > packages.code [delete: cascade]
 
 Table payment {
   id serial [pk]
-  code varchar [not null, note: 'PM_{user.id}_{random}']
+  code varchar [unique, not null, note: 'PM_{user.id}_{random}']
   user serial
 }
 
@@ -67,8 +67,8 @@ Ref: payment.user > U.id [delete: cascade]
 Table transaction {
   id serial [pk]
   code varchar [note: 'mã giao dịch']
-  payment serial
-  package serial
+  payment varchar
+  package varchar
   value float [default: 0]
   discount float [default: 0]
   is_pair bool [default: false]
@@ -77,8 +77,8 @@ Table transaction {
   created_at timestamp [default: `now()`]
 }
 
-Ref: transaction.payment > payment.id [delete: cascade]
-Ref: transaction.package > packages.id [delete: set null]
+Ref: transaction.payment > payment.code [delete: cascade]
+Ref: transaction.package > packages.code [delete: set null]
 
 Table sessions {
   id serial [pk]
@@ -158,7 +158,7 @@ Table albums {
   title varchar(255) [not null]
   is_offical bool [default: true]
   thumbnail varchar(255)
-  sortDescription varchar(255)
+  sortDescription text
   release_at int
 }
 Ref albums_artists: albums.id <> artists.id // many-to-many
@@ -203,3 +203,4 @@ Table play_list {
 
 Ref: play_list.id <> songs.id [delete: cascade]
 Ref: play_list.users > users.id [delete: cascade]
+

@@ -1,0 +1,1 @@
+ALTER TABLE "albums" ALTER COLUMN "sortDescription" TYPE TEXT;

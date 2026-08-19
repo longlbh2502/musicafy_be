@@ -30,7 +30,7 @@ type LoginRes struct {
 }
 
 type LoginStore interface {
-	FindUser(arg usermodels.AccountQueries) (usermodels.User, error)
+	FindUser(arg usermodels.AccountQueries) (*usermodels.User, error)
 	CreateSession(ctx context.Context, arg usermodels.Session) (*usermodels.Session, error)
 }
 
@@ -62,8 +62,8 @@ func (biz *loginBiz) LoginBiz(ctx context.Context, arg LoginReq, token token.Tok
 		}
 	}
 
-	accressToken, accressTokenPayload, _ := token.CreateToken(user)
-	refreshToken, refreshTokenPayload, _ := token.CreateToken(user)
+	accressToken, accressTokenPayload, _ := token.CreateToken(*user)
+	refreshToken, refreshTokenPayload, _ := token.CreateToken(*user)
 
 	session, err := biz.store.CreateSession(ctx, usermodels.Session{
 		Username:     user.Username,
@@ -79,7 +79,7 @@ func (biz *loginBiz) LoginBiz(ctx context.Context, arg LoginReq, token token.Tok
 	}
 
 	res := LoginRes{
-		User:                  user,
+		User:                  *user,
 		Session:               session,
 		AccessToken:           accressToken,
 		RefreshToken:          refreshToken,

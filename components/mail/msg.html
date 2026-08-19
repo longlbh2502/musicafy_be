@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mã Xác Thực OTP</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eeeeee;
+        }
+        .logo {
+            max-width: 150px;
+            height: auto;
+        }
+        .content {
+            padding: 20px 0;
+        }
+        .otp-code {
+            font-size: 32px;
+            font-weight: bold;
+            text-align: center;
+            letter-spacing: 5px;
+            color: #2c3e50;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+        .footer {
+            text-align: center;
+            padding: 15px 0;
+            font-size: 12px;
+            color: #777777;
+            border-top: 1px solid #eeeeee;
+        }
+        .warning {
+            font-size: 13px;
+            color: #e74c3c;
+            text-align: center;
+            margin-top: 15px;
+        }
+        .expiry {
+            font-weight: bold;
+            text-align: center;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Xác Thực Tài Khoản</h1>
+        </div>
+        <div class="content">
+            <p>Kính gửi Quý khách,</p>
+            <p>Cảm ơn bạn đã đăng ký dịch vụ của chúng tôi. Để hoàn tất quá trình xác thực, vui lòng sử dụng mã OTP dưới đây:</p>
+            
+            <div class="otp-code">{{.OTP}}</div>
+            
+            <p class="expiry">Mã xác thực có hiệu lực trong vòng 5 phút.</p>
+            
+            <p>Nếu bạn không thực hiện hành động này, vui lòng bỏ qua email này hoặc liên hệ với bộ phận hỗ trợ khách hàng để được trợ giúp.</p>
+            
+            <p class="warning">Lưu ý: Vui lòng không chia sẻ mã này với bất kỳ ai, kể cả nhân viên của công ty chúng tôi.</p>
+            
+            <p>Trân trọng,<br>Đội ngũ Hỗ trợ Khách hàng</p>
+        </div>
+    </div>
+</body>
+</html>

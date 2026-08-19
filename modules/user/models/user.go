@@ -20,6 +20,9 @@ type User struct {
 	Licence           *string    `json:"licence,omitempty"`
 	Dob               *time.Time `json:"dob,omitempty"`
 	Avatar            string     `json:"avatar,omitempty" gorm:"column:active"`
+	PackageID         *int       `json:"-,omitempty" gorm:"column:package"`
+	Package           *Package   `json:"package,omitempty" gorm:"foreignKey:PackageID"`
+	PackageExpire     *time.Time `json:"package_expire,omitempty" gorm:"column:package_expire"`
 	PasswordChangedAt time.Time  `json:"password_changed_at"`
 }
 

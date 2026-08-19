@@ -1,6 +1,6 @@
 -- Thêm các cột mới vào bảng users
 ALTER TABLE "users" 
-  ADD COLUMN IF NOT EXISTS "package" serial,
+  ADD COLUMN IF NOT EXISTS "package" varchar,
   ADD COLUMN IF NOT EXISTS "package_expire" timestamptz;
 
 ALTER TABLE "users" ALTER COLUMN "package" DROP NOT NULL;
@@ -12,9 +12,8 @@ CREATE TABLE "packages" (
   "id" serial PRIMARY KEY,
   "thumb" varchar,
   "title" varchar,
-  "code" varchar,
+  "code" varchar UNIQUE,
   "level" int DEFAULT 1,
-  "duration" int DEFAULT 0,
   "description" varchar
 );
 
@@ -26,13 +25,14 @@ CREATE TABLE "package_price" (
   "recommend" bool DEFAULT false,
   "price" float DEFAULT 0,
   "description" varchar,
-  "package" serial
+  "package" varchar,
+  "duration" int DEFAULT 0
 );
 
 -- Tạo bảng payment
 CREATE TABLE "payment" (
   "id" serial PRIMARY KEY,
-  "code" varchar NOT NULL,
+  "code" varchar NOT NULL UNIQUE,
   "user" serial
 );
 
@@ -40,8 +40,8 @@ CREATE TABLE "payment" (
 CREATE TABLE "transaction" (
   "id" serial PRIMARY KEY,
   "code" varchar,
-  "payment" serial,
-  "package" serial,
+  "payment" varchar,
+  "package" varchar,
   "value" float DEFAULT 0,
   "discount" float DEFAULT 0,
   "is_pair" bool DEFAULT false,
@@ -51,11 +51,11 @@ CREATE TABLE "transaction" (
 );
 
 -- Thêm các foreign key
-ALTER TABLE "users" ADD FOREIGN KEY ("package") REFERENCES "packages" ("id") ON DELETE SET NULL;
+ALTER TABLE "users" ADD FOREIGN KEY ("package") REFERENCES "packages" ("code") ON DELETE SET NULL;
 
-ALTER TABLE "package_price" ADD FOREIGN KEY ("package") REFERENCES "packages" ("id") ON DELETE CASCADE;
+ALTER TABLE "package_price" ADD FOREIGN KEY ("package") REFERENCES "packages" ("code") ON DELETE CASCADE;
 
 ALTER TABLE "payment" ADD FOREIGN KEY ("user") REFERENCES "users" ("id") ON DELETE CASCADE;
 
-ALTER TABLE "transaction" ADD FOREIGN KEY ("payment") REFERENCES "payment" ("id") ON DELETE CASCADE;
-ALTER TABLE "transaction" ADD FOREIGN KEY ("package") REFERENCES "packages" ("id") ON DELETE SET NULL;
+ALTER TABLE "transaction" ADD FOREIGN KEY ("payment") REFERENCES "payment" ("code") ON DELETE CASCADE;
+ALTER TABLE "transaction" ADD FOREIGN KEY ("package") REFERENCES "packages" ("code") ON DELETE SET NULL;

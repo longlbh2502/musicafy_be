@@ -6,7 +6,7 @@ import (
 )
 
 type AppError struct {
-	StatusCode   int    `json:"status_code"`
+	Code         int    `json:"status_code"`
 	RootErr      error  `json:"-"`
 	Message      string `json:"message"`
 	MessageTrans string `json:"message_trans"`
@@ -16,7 +16,7 @@ type AppError struct {
 
 func NewErrorResponse(root error, msg, msgt, log, key string) *AppError {
 	return &AppError{
-		StatusCode:   int(http.StatusBadRequest),
+		Code:         int(http.StatusBadRequest),
 		RootErr:      root,
 		Message:      msg,
 		MessageTrans: msgt,
@@ -39,7 +39,7 @@ func (e *AppError) Error() string {
 
 func NewFullErrorResponse(statusCode int, root error, msg, msgt, log, key string) *AppError {
 	return &AppError{
-		StatusCode:   statusCode,
+		Code:         statusCode,
 		RootErr:      root,
 		Message:      msg,
 		MessageTrans: msgt,
@@ -50,7 +50,7 @@ func NewFullErrorResponse(statusCode int, root error, msg, msgt, log, key string
 
 func NewUnauthorized(root error, msg, key string) *AppError {
 	return &AppError{
-		StatusCode:   http.StatusUnauthorized,
+		Code:         http.StatusUnauthorized,
 		RootErr:      root,
 		Message:      msg,
 		MessageTrans: "Lỗi xác thực người dùng",

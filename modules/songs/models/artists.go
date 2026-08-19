@@ -5,15 +5,22 @@ type Artists struct {
 	MaskId string `json:"mask_id" gorm:"column:mask_id"`
 	Name   string `json:"name" gorm:"column:name"`
 	// Sportlight  bool    `json:"sportlight" gorm:"column:sportlight"`
-	Alias       string  `json:"alias" gorm:"column:alias"`
-	Thumbnail   *string `json:"thumbnail" gorm:"column:thumbnail"`
-	ThumbnailM  *string `json:"thumbnailM" gorm:"column:thumbnailM"`
-	PlaylistId  *string `json:"playlist_id" gorm:"column:playlistId"`
-	TotalFollow int     `json:"total_follow" gorm:"column:totalFollow"`
+	Alias       string     `json:"alias" gorm:"column:alias"`
+	Thumbnail   *string    `json:"thumbnail" gorm:"column:thumbnail"`
+	ThumbnailM  *string    `json:"thumbnailM" gorm:"column:thumbnailM"`
+	PlaylistId  *string    `json:"playlist_id" gorm:"column:playlistId"`
+	TotalFollow int        `json:"total_follow" gorm:"column:totalFollow"`
+	Sections    *[]Section `json:"sections" gorm:"-"`
 }
 
 func (Artists) TableName() string {
 	return "artists"
+}
+
+type Section struct {
+	Items []Songs `json:"items"`
+	Type  string  `json:"sectionType"`
+	Title string  `json:"title"`
 }
 
 type Composers struct {
